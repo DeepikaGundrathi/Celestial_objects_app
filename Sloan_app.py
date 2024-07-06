@@ -17,10 +17,12 @@ g = st.number_input('g', min_value=0.0)
 r = st.number_input('r', min_value=0.0)
 i = st.number_input('i', min_value=0.0)
 z = st.number_input('z', min_value=0.0)
+redshift = st.number_input('redshift', min_value=0.0)
 
 if st.button('Classify'):
     # Create a DataFrame for prediction
-    input_data = pd.DataFrame([[ra, dec, u, g, r, i, z]], columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z'])
+    input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]], 
+                              columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
 
     # Make prediction
     prediction = model.predict(input_data)
