@@ -17,14 +17,14 @@ st.write('Predict whether an object is a star, galaxy, or QSO based on its featu
 # Define the input fields for user to enter data
 def user_input_features():
     st.sidebar.header('User Input Features')
-    ra = st.sidebar.number_input('Right Ascension (ra)', min_value=0.0)
-    dec = st.sidebar.number_input('Declination (dec)', min_value=0.0)
-    u = st.sidebar.number_input('u')
-    g = st.sidebar.number_input('g')
-    r = st.sidebar.number_input('r')
-    i = st.sidebar.number_input('i')
-    z = st.sidebar.number_input('z')
-    redshift = st.sidebar.number_input('Redshift')
+    ra = st.sidebar.number_input('Right Ascension (ra)', min_value=0.0, step=0.01)
+    dec = st.sidebar.number_input('Declination (dec)', min_value=0.0, step=0.01)
+    u = st.sidebar.number_input('u', step=0.01)
+    g = st.sidebar.number_input('g', step=0.01)
+    r = st.sidebar.number_input('r', step=0.01)
+    i = st.sidebar.number_input('i', step=0.01)
+    z = st.sidebar.number_input('z', step=0.01)
+    redshift = st.sidebar.number_input('Redshift', step=0.0001)
     
     data = {
         'ra': ra,
@@ -42,20 +42,20 @@ def user_input_features():
 input_df = user_input_features()
 
 # Display the input data
-st.subheader('User Input features')
+st.subheader('User Input Features')
 st.write(input_df)
 
 # Make predictions
-prediction = model.predict(input_df)
-prediction_proba = model.predict_proba(input_df)
+prediction = model.predict(input_df)[0]
+prediction_proba = model.predict_proba(input_df)[0]
 
 # Visualize prediction results
 st.subheader('Prediction')
 object_type = ['Galaxy', 'QSO', 'Star']
-st.write(f"The object is classified as: **{object_type[prediction[0]]}**")
+st.write(f"The object is classified as: **{object_type[prediction]}**")
 
 st.subheader('Prediction Probability')
-st.write(pd.DataFrame(prediction_proba, columns=object_type))
+st.write(pd.DataFrame(prediction_proba.reshape(1, -1), columns=object_type))
 
 # Add a footer
 st.markdown(
