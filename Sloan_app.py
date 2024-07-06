@@ -10,14 +10,14 @@ with open('decision_tree_model.pkl', 'rb') as file:
 st.title('Celestial Object Classification')
 st.write('Enter values for the following features:')
 
-ra = st.number_input('ra', min_value=0.0, max_value=360.0)
-dec = st.number_input('dec', min_value=-90.0, max_value=90.0)
-u = st.number_input('u', min_value=0.0)
-g = st.number_input('g', min_value=0.0)
-r = st.number_input('r', min_value=0.0)
-i = st.number_input('i', min_value=0.0)
-z = st.number_input('z', min_value=0.0)
-redshift = st.number_input('redshift', min_value=0.0)
+ra = st.number_input('ra', min_value=0.0, max_value=360.0, format="%.8f")
+dec = st.number_input('dec', min_value=-90.0, max_value=90.0, format="%.8f")
+u = st.number_input('u', min_value=0.0, format="%.8f")
+g = st.number_input('g', min_value=0.0, format="%.8f")
+r = st.number_input('r', min_value=0.0, format="%.8f")
+i = st.number_input('i', min_value=0.0, format="%.8f")
+z = st.number_input('z', min_value=0.0, format="%.8f")
+redshift = st.number_input('redshift', min_value=-1.0, format="%.8f")
 
 if st.button('Classify'):
     # Create a DataFrame for prediction
