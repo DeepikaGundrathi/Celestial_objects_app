@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import plotly.graph_objects as go
 from PIL import Image
 
 # Load the trained model
@@ -26,7 +27,7 @@ def set_background(image_url):
 background_image_url = "https://github.com/SriKumar1313/Sloan_app/raw/main/assets/pexels-minan1398-813269.jpg"
 set_background(background_image_url)
 
-# Add welcome page with sparkles
+# Add welcome page with 3D rotating moon
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
@@ -51,18 +52,53 @@ if st.session_state.page == "welcome":
     }
     </style>
     """, unsafe_allow_html=True)
-    
+
     st.markdown("""
     <div class="welcome-container">
         <div class="welcome-title">✨ Welcome to the Galaxy App! ✨</div>
         <div class="welcome-subtitle">Discover and classify celestial objects: Stars, Galaxies, or Quasars</div>
-        <div>
-            <br>
-            <button onclick="document.location.reload()">Click Here to Begin 🚀</button>
-        </div>
     </div>
     """, unsafe_allow_html=True)
     
+    # 3D rotating moon model using Plotly
+    fig = go.Figure(go.Surface(
+        z=[[0, 0], [0, 0]],
+        surfacecolor=[[0, 0], [0, 0]],
+        cmin=0,
+        cmax=0,
+        colorscale=[[0, "gray"], [1, "gray"]],
+        showscale=False,
+        opacity=0.8
+    ))
+    
+    fig.update_layout(
+        title='🌙 Rotating Moon 🌙',
+        scene=dict(
+            xaxis=dict(visible=False),
+            yaxis=dict(visible=False),
+            zaxis=dict(visible=False),
+            annotations=[dict(
+                showarrow=False,
+                text="Click Here to Begin 🚀",
+                x=0,
+                y=0,
+                z=0,
+                xanchor="left",
+                xshift=0,
+                opacity=1,
+                font=dict(color="white", size=15)
+            )]
+        ),
+        width=800,
+        height=800,
+        margin=dict(l=0, r=0, b=0, t=40)
+    )
+    
+    fig.update_traces(contours_z=dict(show=True, usecolormap=True,
+                                      highlightcolor="limegreen", project_z=True))
+
+    st.plotly_chart(fig)
+
     if st.button("Click Here to Begin 🚀"):
         st.session_state.page = "main"
 
