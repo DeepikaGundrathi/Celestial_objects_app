@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+from PIL import Image
 
 # Load the trained model
 model_path = "decision_tree_model.pkl"
@@ -15,9 +16,6 @@ def set_background(image_url):
         .stApp {{
             background: url({image_url});
             background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            height: 100vh;
         }}
         </style>
         """,
@@ -28,20 +26,14 @@ def set_background(image_url):
 background_image_url = "https://github.com/SriKumar1313/Sloan_app/raw/main/assets/pexels-minan1398-813269.jpg"
 set_background(background_image_url)
 
-# Initialize session state
+# Add welcome page with sparkles
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
-# Fun welcome page
 if st.session_state.page == "welcome":
     st.markdown("""
     <style>
     .welcome-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
         text-align: center;
         color: white;
     }
@@ -51,31 +43,11 @@ if st.session_state.page == "welcome":
     }
     .welcome-subtitle {
         font-size: 1.5em;
-        margin-bottom: 30px;
-    }
-    .start-button {
-        background-color: #ff4b4b;
-        border: none;
-        color: white;
-        padding: 15px 30px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 20px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 12px;
-        animation: glow 1.5s infinite;
     }
     @keyframes sparkles {
         0% { text-shadow: 0 0 5px #ffffff; }
         50% { text-shadow: 0 0 20px #ffffff; }
         100% { text-shadow: 0 0 5px #ffffff; }
-    }
-    @keyframes glow {
-        0% { box-shadow: 0 0 5px #ff4b4b; }
-        50% { box-shadow: 0 0 20px #ff4b4b; }
-        100% { box-shadow: 0 0 5px #ff4b4b; }
     }
     </style>
     """, unsafe_allow_html=True)
@@ -83,8 +55,11 @@ if st.session_state.page == "welcome":
     st.markdown("""
     <div class="welcome-container">
         <div class="welcome-title">✨ Welcome to the Galaxy App! ✨</div>
-        <div class="welcome-subtitle">Explore the universe and classify celestial objects!</div>
-        <button class="start-button" onclick="window.location.reload()">Click Here to Begin 🚀</button>
+        <div class="welcome-subtitle">Discover and classify celestial objects: Stars, Galaxies, or Quasars</div>
+        <div>
+            <br>
+            <button onclick="document.location.reload()">Click Here to Begin 🚀</button>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
