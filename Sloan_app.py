@@ -43,18 +43,18 @@ Please enter the parameters below to get started.
 st.markdown("### 🚀 Input Parameters 👇")
 
 # Option to upload a CSV file
-upload_option = st.radio("Choose an input method:", ('Manual Entry', 'Upload CSV'))
+upload_option = st.radio("Choose an input method:", ('Interactive Entry', 'Upload CSV'))
 
-if upload_option == 'Manual Entry':
-    # Create input fields for the user to enter parameters manually
-    ra = st.number_input('Right Ascension (ra) 📐', min_value=0.0, format="%.8f")
-    dec = st.number_input('Declination (dec) 📐', min_value=0.0, format="%.8f")
-    u = st.number_input('u-band magnitude 📊', min_value=0.0, format="%.8f")
-    g = st.number_input('g-band magnitude 📊', min_value=0.0, format="%.8f")
-    r = st.number_input('r-band magnitude 📊', min_value=0.0, format="%.8f")
-    i = st.number_input('i-band magnitude 📊', min_value=0.0, format="%.8f")
-    z = st.number_input('z-band magnitude 📊', min_value=0.0, format="%.8f")
-    redshift = st.number_input('Redshift 🌌', min_value=-1.0, format="%.8f")
+if upload_option == 'Interactive Entry':
+    # Create sliders for the user to enter parameters interactively
+    ra = st.slider('Right Ascension (ra) 📐', min_value=0.0, max_value=360.0, step=0.0001)
+    dec = st.slider('Declination (dec) 📐', min_value=-90.0, max_value=90.0, step=0.0001)
+    u = st.slider('u-band magnitude 📊', min_value=0.0, max_value=30.0, step=0.0001)
+    g = st.slider('g-band magnitude 📊', min_value=0.0, max_value=30.0, step=0.0001)
+    r = st.slider('r-band magnitude 📊', min_value=0.0, max_value=30.0, step=0.0001)
+    i = st.slider('i-band magnitude 📊', min_value=0.0, max_value=30.0, step=0.0001)
+    z = st.slider('z-band magnitude 📊', min_value=0.0, max_value=30.0, step=0.0001)
+    redshift = st.slider('Redshift 🌌', min_value=-1.0, max_value=10.0, step=0.0001)
     
     if st.button('Classify 🔭'):
         # Show a progress bar
