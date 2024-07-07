@@ -1,58 +1,45 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import pickle
 
-# Load the model from the pickle file
-model_filename = 'decision_tree_model.pkl'
-with open(model_filename, 'rb') as file:
-    model = pickle.load(file)
+# Function to load the model and predict
+def load_model_and_predict(ra, dec, u, g, r, i, z, redshift):
+    # Load the trained model from pickle file
+    filename = 'decision_tree_model.pkl'
+    with open(filename, 'rb') as f:
+        model = pickle.load(f)
 
-# Function to preprocess input data
-def preprocess_input(input_data):
-    # Your preprocessing steps here
-    # Example: Scaling, handling missing values, feature engineering
-    return input_data
+    # Prepare input data as a DataFrame for prediction
+    input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]],
+                              columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
 
-# Function to predict the object type
-def predict_object_type(input_features):
-    # Preprocess input features
-    input_features = preprocess_input(input_features)
-    
-    # Predict using the loaded model
-    prediction = model.predict(input_features)
-    prediction_proba = model.predict_proba(input_features)
-    
+    # Perform prediction
+    prediction = model.predict(input_data)
+    prediction_proba = model.predict_proba(input_data)
+
     return prediction, prediction_proba
 
-# Main Streamlit app
+# Main function to create the Streamlit app
 def main():
-    st.title('Celestial Object Classifier')
-    st.sidebar.header('Input Features')
-    
-    # Example input features
-    input_features = {
-        'u': st.sidebar.slider('u', 10.0, 30.0, 18.0),
-        'g': st.sidebar.slider('g', 10.0, 30.0, 18.0),
-        'r': st.sidebar.slider('r', 10.0, 30.0, 18.0),
-        'i': st.sidebar.slider('i', 10.0, 30.0, 18.0),
-        'z': st.sidebar.slider('z', 10.0, 30.0, 18.0),
-        'redshift': st.sidebar.slider('redshift', 0.0, 2.0, 0.5)
-    }
-    
-    st.sidebar.markdown('---')
-    
-    if st.sidebar.button('Classify'):
-        # Predict object type
-        prediction, prediction_proba = predict_object_type(pd.DataFrame([input_features]))
-        
-        # Visualize prediction results
-        st.subheader('Prediction')
-        object_type = ['Galaxy', 'QSO', 'Star']
-        st.write(f"The object is classified as: **{object_type[int(prediction[0])]}**")
-        
-        st.subheader('Prediction Probability')
-        st.write(pd.DataFrame(prediction_proba, columns=object_type))
+    st.title('Galaxy Type Classifier')
+
+    # User inputs
+    ra = st.number_input('RA (Right Ascension)', format="%.6f")
+    dec = st.number_input('Dec (Declination)', format="%.6f")
+    u = st.number_input('u (u-band magnitudes)')
+    g = st.number_input('g (g-band magnitudes)')
+    r = st.number_input('r (r-band magnitudes)')
+    i = st.number_input('i (i-band magnitudes)')
+    z = st.number_input('z (z-band magnitudes)')
+    redshift = st.number_input('redshift', min_value=-1.0, format="%.8f")
+
+    if st.button('Classify'):
+        prediction, prediction_proba = load_model_and_predict(ra, dec, u, g, r, i, z, redshift)
+
+        st.write('## Prediction Results')
+        st.write(f'Predicted Class: {prediction[0]}')
+        st.write('Class Probabilities:')
+        st.write(prediction_proba)
 
 if __name__ == '__main__':
     main()
