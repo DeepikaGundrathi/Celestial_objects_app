@@ -24,14 +24,18 @@ if st.button('Classify'):
     input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]], 
                               columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
 
-    # Make prediction
-    prediction = model.predict(input_data)
-    prediction_proba = model.predict_proba(input_data)
+    try:
+        # Make prediction
+        prediction = model.predict(input_data)
+        prediction_proba = model.predict_proba(input_data)
 
-    # Visualize prediction results
-    st.subheader('Prediction')
-    object_type = ['Galaxy', 'QSO', 'Star']
-    st.write(f"The object is classified as: **{object_type[int(prediction[0])]}**")
+        # Visualize prediction results
+        st.subheader('Prediction')
+        object_type = ['Galaxy', 'QSO', 'Star']
+        st.write(f"The object is classified as: **{object_type[int(prediction[0])]}**")
 
-    st.subheader('Prediction Probability')
-    st.write(pd.DataFrame(prediction_proba, columns=object_type))
+        st.subheader('Prediction Probability')
+        st.write(pd.DataFrame(prediction_proba, columns=object_type))
+
+    except ValueError as e:
+        st.error(f"Prediction error: {e}")
