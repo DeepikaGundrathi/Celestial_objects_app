@@ -66,7 +66,7 @@ with st.expander("Upload CSV File"):
         st.write(input_data)
         file_submit_button = st.button("Classify from File 🔭")
 
-# Handling the prediction
+# Handling the prediction for manual entry
 if manual_submit_button:
     with st.spinner('Classifying... 🚀'):
         input_data = pd.DataFrame([[float(ra), float(dec), float(u), float(g), float(r), float(i), float(z), float(redshift)]], columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
@@ -74,7 +74,8 @@ if manual_submit_button:
     st.success(f"### 🛸 Predicted Object Type: **{prediction}**")
     st.balloons()
 
-if file_submit_button and uploaded_file is not None:
+# Handling the prediction for file upload
+if 'file_submit_button' in locals() and file_submit_button and uploaded_file is not None:
     with st.spinner('Classifying... 🚀'):
         predictions = model.predict(input_data)
         input_data['Predicted Class'] = predictions
