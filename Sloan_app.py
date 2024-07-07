@@ -42,27 +42,42 @@ Please enter the parameters below to get started.
 # Add emoji separator
 st.markdown("### 🚀 Input Parameters 👇")
 
-# Create input fields for the user to enter parameters
-ra = st.number_input('Right Ascension (ra) 📐', min_value=0.0, format="%.8f")
-dec = st.number_input('Declination (dec) 📐', min_value=0.0, format="%.8f")
-u = st.number_input('u-band magnitude 📊', min_value=0.0, format="%.8f")
-g = st.number_input('g-band magnitude 📊', min_value=0.0, format="%.8f")
-r = st.number_input('r-band magnitude 📊', min_value=0.0, format="%.8f")
-i = st.number_input('i-band magnitude 📊', min_value=0.0, format="%.8f")
-z = st.number_input('z-band magnitude 📊', min_value=0.0, format="%.8f")
-redshift = st.number_input('Redshift 🌌', min_value=-1.0, format="%.8f")
+# Option to upload a CSV file
+upload_option = st.radio("Choose an input method:", ('Manual Entry', 'Upload CSV'))
 
-# Add a predict button
-if st.button('Classify 🔭'):
-    # Create a DataFrame for prediction
-    input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]],
-                              columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
+if upload_option == 'Manual Entry':
+    # Create input fields for the user to enter parameters manually
+    ra = st.number_input('Right Ascension (ra) 📐', min_value=0.0, format="%.8f")
+    dec = st.number_input('Declination (dec) 📐', min_value=0.0, format="%.8f")
+    u = st.number_input('u-band magnitude 📊', min_value=0.0, format="%.8f")
+    g = st.number_input('g-band magnitude 📊', min_value=0.0, format="%.8f")
+    r = st.number_input('r-band magnitude 📊', min_value=0.0, format="%.8f")
+    i = st.number_input('i-band magnitude 📊', min_value=0.0, format="%.8f")
+    z = st.number_input('z-band magnitude 📊', min_value=0.0, format="%.8f")
+    redshift = st.number_input('Redshift 🌌', min_value=-1.0, format="%.8f")
     
-    # Make a prediction
-    prediction = model.predict(input_data)[0]
+    if st.button('Classify 🔭'):
+        # Create a DataFrame for prediction
+        input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]],
+                                  columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
+        
+        # Make a prediction
+        prediction = model.predict(input_data)[0]
+        
+        # Display the prediction
+        st.markdown(f"### 🛸 Predicted Object Type: **{prediction}**")
+else:
+    uploaded_file = st.file_uploader("Upload a CSV file with columns ['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift']", type="csv")
     
-    # Display the prediction
-    st.markdown(f"### 🛸 Predicted Object Type: **{prediction}**")
+    if uploaded_file is not None:
+        input_data = pd.read_csv(uploaded_file)
+        if st.button('Classify 🔭'):
+            # Make predictions
+            predictions = model.predict(input_data)
+            
+            # Display the predictions
+            st.markdown("### 🛸 Predicted Object Types:")
+            st.dataframe(pd.DataFrame(predictions, columns=["Prediction"]))
 
 # Footer with emoji
 st.markdown("### 🌟 Thank you for using the SDSS Classifier! 🌟")
