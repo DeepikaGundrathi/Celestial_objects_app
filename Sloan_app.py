@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import pickle
-from PIL import Image
 
 # Load the trained model
 model_path = "decision_tree_model.pkl"
@@ -29,10 +28,11 @@ def set_background(image_url):
 background_image_url = "https://github.com/SriKumar1313/Sloan_app/raw/main/assets/pexels-minan1398-813269.jpg"
 set_background(background_image_url)
 
-# Fun welcome page
+# Initialize session state
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
+# Fun welcome page
 if st.session_state.page == "welcome":
     st.markdown("""
     <style>
@@ -140,6 +140,7 @@ if st.session_state.page == "main":
             prediction = model.predict(input_data)[0]
         st.success(f"### 🛸 Predicted Object Type: **{prediction}**")
         st.balloons()
+        st.markdown("### 🌟 Thank you for using the SDSS Classifier! 🌟")
 
     # Handling the prediction for file upload
     if 'file_submit_button' in locals() and file_submit_button and uploaded_file is not None:
@@ -150,9 +151,7 @@ if st.session_state.page == "main":
             st.write(input_data)
         st.success("### 🛸 Classification Completed!")
         st.balloons()
-
-    # Footer with emoji
-    st.markdown("### 🌟 Thank you for using the SDSS Classifier! 🌟")
+        st.markdown("### 🌟 Thank you for using the SDSS Classifier! 🌟")
 
     # Add some colorful elements and animations
     st.markdown("""
