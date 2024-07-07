@@ -1,71 +1,102 @@
 import streamlit as st
 import pandas as pd
 import pickle
+from PIL import Image
+import base64
 
-# Load the model and predict
-def load_model_and_predict(ra, dec, u, g, r, i, z, redshift):
-    filename = 'decision_tree_model.pkl'
-    with open(filename, 'rb') as f:
-        model = pickle.load(f)
+# Load the trained model
+model_path = 'decision_tree_model.pkl'
+with open(model_path, 'rb') as file:
+    model = pickle.load(file)
 
-    input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]],
-                              columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
+# Set page config
+st.set_page_config(page_title="Celestial Object Classifier", page_icon=":star:", layout="wide")
 
-    prediction = model.predict(input_data)
-    prediction_proba = model.predict_proba(input_data)
+# Load background image
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
-    return prediction, prediction_proba
+def set_background(png_file):
+    bin_str = get_base64(png_file)
+    page_bg_img = f'''
+    <style>
+    .stApp {{
+        background-image: url("data:image/png;base64,{bin_str}");
+        background-size: cover;
+    }}
+    </style>
+    '''
+    st.markdown(page_bg_img, unsafe_allow_html=True)
 
-# Main function to create the Streamlit app
+set_background('assets/pexels-minan1398-813269.jpg')
+
+# Custom CSS for a colorful look
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f0f2f6;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+    .stButton>button:hover {
+        background-color: white; 
+        color: black; 
+        border: 2px solid #4CAF50;
+    }
+    .stTextInput>div>input {
+        border: 2px solid #4CAF50;
+        border-radius: 4px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+st.title(":star: Celestial Object Classifier :star:")
+
 def main():
-    st.set_page_config(
-        page_title="Galaxy Type Classifier",
-        page_icon=":milky_way:",
-        layout="centered",
-        initial_sidebar_state="expanded",
-        menu_items={
-            'About': "This app classifies celestial objects into stars, galaxies, or quasars based on photometric and spectral features."
-        }
-    )
+    st.header("Enter the parameters to classify the object")
 
-    # CSS for custom background and styling
-    st.markdown("""
-        <style>
-        .stApp {
-            background-image: url("https://images.unsplash.com/photo-1575464675312-6c64631f980c");
-            background-size: cover;
-            color: white;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+    with st.form("prediction_form"):
+        col1, col2 = st.columns(2)
 
-    st.title('Galaxy Type Classifier :milky_way:')
-    st.markdown("## Identify the type of celestial object using its features!")
+        with col1:
+            ra = st.number_input('Right Ascension (ra)', format="%.8f")
+            u = st.number_input('u-band magnitude', format="%.8f")
+            r = st.number_input('r-band magnitude', format="%.8f")
+            z = st.number_input('z-band magnitude', format="%.8f")
 
-    # User inputs
-    st.sidebar.header("Input Parameters")
-    ra = st.sidebar.number_input('RA (Right Ascension)', format="%.6f")
-    dec = st.sidebar.number_input('Dec (Declination)', format="%.6f")
-    u = st.sidebar.number_input('u (u-band magnitudes)')
-    g = st.sidebar.number_input('g (g-band magnitudes)')
-    r = st.sidebar.number_input('r (r-band magnitudes)')
-    i = st.sidebar.number_input('i (i-band magnitudes)')
-    z = st.sidebar.number_input('z (z-band magnitudes)')
-    redshift = st.sidebar.number_input('redshift', min_value=-1.0, format="%.8f")
+        with col2:
+            dec = st.number_input('Declination (dec)', format="%.8f")
+            g = st.number_input('g-band magnitude', format="%.8f")
+            i = st.number_input('i-band magnitude', format="%.8f")
+            redshift = st.number_input('Redshift', format="%.8f")
 
-    if st.sidebar.button('Classify'):
-        prediction, prediction_proba = load_model_and_predict(ra, dec, u, g, r, i, z, redshift)
+        submit_button = st.form_submit_button(label='Classify')
 
-        st.write('## Prediction Results :sparkles:')
-        st.markdown(f"### Predicted Class: **{prediction[0]}**")
-        st.markdown("### Class Probabilities:")
-        class_names = ['Galaxy', 'Quasar', 'Star']
-        for i, prob in enumerate(prediction_proba[0]):
-            st.markdown(f"**{class_names[i]}**: {prob * 100:.2f}%")
+    if submit_button:
+        input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]], columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
+        prediction = model.predict(input_data)
+        object_type = prediction[0]
 
-        # Add a visual representation (e.g., bar chart) for the class probabilities
-        st.bar_chart(pd.DataFrame(prediction_proba[0], index=class_names, columns=["Probability"]))
+        st.success(f"The object is classified as: {object_type}")
+        st.balloons()
 
-# Run the main function
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
