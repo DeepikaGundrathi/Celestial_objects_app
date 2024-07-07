@@ -26,7 +26,7 @@ def set_background(image_url):
 background_image_url = "https://github.com/SriKumar1313/Sloan_app/raw/main/assets/pexels-minan1398-813269.jpg"
 set_background(background_image_url)
 
-# Add welcome page with 3D moon
+# Add welcome page with GLTF model
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
@@ -56,7 +56,7 @@ if st.session_state.page == "welcome":
     <div class="welcome-container">
         <div class="welcome-title">✨ Welcome to the Galaxy App! ✨</div>
         <div class="welcome-subtitle">Discover and classify celestial objects: Stars, Galaxies, or Quasars</div>
-        <iframe src="3d_moon.html" width="800" height="600" style="border:none;"></iframe>
+        <iframe src="https://sketchfab.com/models/dbb2f075329747a09cc8add2ad05acad/embed" width="800" height="600" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
         <div>
             <br>
             <button onclick="document.location.reload()">Click Here to Begin 🚀</button>
