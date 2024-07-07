@@ -57,27 +57,63 @@ if upload_option == 'Manual Entry':
     redshift = st.number_input('Redshift 🌌', min_value=-1.0, format="%.8f")
     
     if st.button('Classify 🔭'):
-        # Create a DataFrame for prediction
-        input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]],
-                                  columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
-        
-        # Make a prediction
-        prediction = model.predict(input_data)[0]
+        # Show a progress bar
+        with st.spinner('Classifying... 🚀'):
+            # Create a DataFrame for prediction
+            input_data = pd.DataFrame([[ra, dec, u, g, r, i, z, redshift]],
+                                      columns=['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift'])
+            
+            # Make a prediction
+            prediction = model.predict(input_data)[0]
         
         # Display the prediction
-        st.markdown(f"### 🛸 Predicted Object Type: **{prediction}**")
+        st.success(f"### 🛸 Predicted Object Type: **{prediction}**")
+        st.balloons()
 else:
     uploaded_file = st.file_uploader("Upload a CSV file with columns ['ra', 'dec', 'u', 'g', 'r', 'i', 'z', 'redshift']", type="csv")
     
     if uploaded_file is not None:
         input_data = pd.read_csv(uploaded_file)
         if st.button('Classify 🔭'):
-            # Make predictions
-            predictions = model.predict(input_data)
+            # Show a progress bar
+            with st.spinner('Classifying... 🚀'):
+                # Make predictions
+                predictions = model.predict(input_data)
             
             # Display the predictions
-            st.markdown("### 🛸 Predicted Object Types:")
+            st.success("### 🛸 Predicted Object Types:")
             st.dataframe(pd.DataFrame(predictions, columns=["Prediction"]))
+            st.balloons()
 
 # Footer with emoji
 st.markdown("### 🌟 Thank you for using the SDSS Classifier! 🌟")
+
+# Add some colorful elements
+st.markdown("""
+<style>
+    .stButton>button {
+        background-color: #ff4b4b;
+        color: white;
+        border-radius: 10px;
+        border: 2px solid #ff4b4b;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .stButton>button:hover {
+        background-color: white;
+        color: #ff4b4b;
+    }
+    .stMarkdown h2 {
+        color: #ff4b4b;
+    }
+    .stMarkdown p {
+        color: #ff4b4b;
+    }
+    .stRadio>label {
+        color: #ff4b4b;
+    }
+    .stMarkdown img {
+        border-radius: 10px;
+    }
+</style>
+""", unsafe_allow_html=True)
