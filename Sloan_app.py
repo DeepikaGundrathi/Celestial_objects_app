@@ -36,6 +36,9 @@ if st.session_state.page == "welcome":
     .welcome-container {
         text-align: center;
         color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     .welcome-title {
         font-size: 3em;
@@ -43,6 +46,9 @@ if st.session_state.page == "welcome":
     }
     .welcome-subtitle {
         font-size: 1.5em;
+    }
+    .welcome-button {
+        margin-top: 20px;
     }
     @keyframes sparkles {
         0% { text-shadow: 0 0 5px #ffffff; }
@@ -56,8 +62,8 @@ if st.session_state.page == "welcome":
     <div class="welcome-container">
         <div class="welcome-title">✨ Welcome to the Galaxy App! ✨</div>
         <div class="welcome-subtitle">Discover and classify celestial objects: Stars, Galaxies, or Quasars</div>
-        <iframe src="https://sketchfab.com/models/dbb2f075329747a09cc8add2ad05acad/embed" width="800" height="600" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
-        <div>
+        <iframe src="https://sketchfab.com/models/dbb2f075329747a09cc8add2ad05acad/embed?autostart=0" width="800" height="600" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+        <div class="welcome-button">
             <br>
             <button onclick="document.location.reload()">Click Here to Begin 🚀</button>
         </div>
