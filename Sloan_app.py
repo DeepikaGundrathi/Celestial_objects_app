@@ -165,4 +165,8 @@ if st.session_state.page == "main":
         }
         @keyframes inputglow {
             0% { box-shadow: 0 0 5px #ff4b4b; }
-            50% { box-shadow: 0 0 10px #ff4b4b
+            50% { box-shadow: 0 0 10px #ff4b4b; }
+            100% { box-shadow: 0 0 5px #ff4b4b; }
+        }
+    </style>
+    """, unsafe_allow_html=True)
